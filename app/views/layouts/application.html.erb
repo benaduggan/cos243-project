@@ -8,7 +8,33 @@
 </head>
 <body>
 
-<%= yield %>
-
+  <% flash.each do |level,message| %>
+  <div class="alert alert-<%= level %>"><%= message %></div>
+  <%end%>
+  
+  <div class="container">
+    
+  <nav class="navbar navbar-default" role="navigation"> 
+    <ul class="nav nav-pills">
+      
+      <li><%= link_to "Game Contest Server", root_path %></li>
+      <li><%= link_to "Users", users_path %></li>
+      <li><%= link_to "Sign Up", signup_path %></li>
+      
+      <!--
+      <li class="<%= 'active' if params[:action] == 'index' %>"><a href="/users">Home</a></li>
+      <li class="<%= 'active' if params[:action] == 'new' %>"><a href="/users/new">New</a></li>
+      <li class="<%= 'active' if params[:action] == 'edit' %>"><a href="/users/<%= params[:id] %>/edit">Edit</a></li>
+      -->
+  
+    </ul>
+  </nav>
+    
+    
+      <%= yield %>  
+  </div>
+  
 </body>
 </html>
+
+<!-- <li <%= if current_page?(root_path) then 'class=active' end%> <%= link_to 'Home', root_path %> </li> -->
