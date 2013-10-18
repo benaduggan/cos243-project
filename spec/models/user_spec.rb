@@ -12,7 +12,10 @@ describe User do
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:authenticate) }
 
+  it { should respond_to(:admin) }
+
   it { should be_valid }
+  it { should_not be_admin }
 
   describe "empty username" do
     before { user.username = '' }
@@ -44,28 +47,28 @@ describe User do
   describe "various email formats" do
     describe "poorly formed addresses" do
       addresses = %w[user@foo,com
-		     user_at_foo.org
-		     example.user@foo.
-		     foo@bar_baz.com
-		     foo@bar+baz.com]
+                     user_at_foo.org
+                     example.user@foo.
+                     foo@bar_baz.com
+                     foo@bar+baz.com]
       addresses.each do |invalid_address|
-	it "is invalid" do
-	  user.email = invalid_address
-	  expect(user).not_to be_valid
-	end
+        it "is invalid" do
+          user.email = invalid_address
+          expect(user).not_to be_valid
+        end
       end
     end
 
     describe "properly formed addresses" do
       addresses = %w[user@foo.COM
-		     A_US-ER@f.b.org
-		     frst.lst@foo.jp
-		     a+b@baz.cn]
+                     A_US-ER@f.b.org
+                     frst.lst@foo.jp
+                     a+b@baz.cn]
       addresses.each do |valid_address|
-	it "is valid" do
-	  user.email = valid_address
-	  expect(user).to be_valid
-	end
+        it "is valid" do
+          user.email = valid_address
+          expect(user).to be_valid
+        end
       end
     end
   end
@@ -98,5 +101,11 @@ describe User do
       it { should_not eq authenticated_user }
       specify { expect(authenticated_user).to be_false }
     end
+  end
+
+  describe "admin capabilities" do
+    let(:admin) { FactoryGirl.create(:admin) }
+
+    specify { expect(admin).to be_admin }
   end
 end

@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+  before_action :user_logged_in, only: [:edit, :update]
+  before_action :ensure_correct_user, only: [:edit, :update]
+  before_action :ensure_admin_user, only: [:destroy]
   
   def index
     @users = User.all
@@ -24,7 +27,6 @@ class UsersController < ApplicationController
   end
 
   def edit 
-    @user = User.find(params[:id])
   end
     
   def update
@@ -48,4 +50,17 @@ class UsersController < ApplicationController
     def permittedparams
       permittedparams = params.require(:user).permit(:username,:password,:password_confirmation,:email)
     end    
+    
+    def user_logged_in
+      redirect_to login_path unless logged_in?
+    end
+    
+    def ensure_correct_user
+      @user = User.find(params[:id])
+      redirect_to root_path unless current_user?(@user)
+    end
+    
+    def ensure_admin_user
+      redirect_to users_path unless current_user.admin?
+    end
 end
