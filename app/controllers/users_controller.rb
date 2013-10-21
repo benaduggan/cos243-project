@@ -17,12 +17,7 @@ class UsersController < ApplicationController
   end
   
   def create
-    if logged_in?
-      redirect_to root_path
-      flash[:warning] = "Already Logged In"
-    else
       @user = User.new(permittedparams)
-    
       if @user.save then
         flash[:success] = "Welcome to the site #{@user.username}! You are now logged in!"
         logIn(@user)
@@ -30,7 +25,6 @@ class UsersController < ApplicationController
       else
         render 'new'
       end
-    end
   end
   
   def show
