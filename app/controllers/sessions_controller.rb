@@ -20,7 +20,7 @@ class SessionsController < ApplicationController
   
   def destroy
     logOut(@user)
-    flash[:success] = "You have logged out!"
+    flash[:info] = "You have logged out!"
     redirect_to root_path
   end
 

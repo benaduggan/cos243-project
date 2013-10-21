@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :user_logged_in, only: [:edit, :update]
   before_action :ensure_correct_user, only: [:edit, :update]
   before_action :ensure_admin_user, only: [:destroy]
+  before_action :ensure_not_logged_in, only: [:new, :create]
   
   def index
     @users = User.all
@@ -18,7 +19,7 @@ class UsersController < ApplicationController
   def create
     if logged_in?
       redirect_to root_path
-      flash[:danger] = "Already Logged In"
+      flash[:warning] = "Already Logged In"
     else
       @user = User.new(permittedparams)
     
@@ -52,14 +53,17 @@ class UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     if @user.admin?
-      flash.now[:danger] = "Should not delete admin"
+      flash[:danger] = "Should not delete admin"
       redirect_to root_path
-    else
+    elsif !current_user?(@user)
       @user.destroy
-      flash[:success] = "User successfully deleted!"
-      redirect_to users_path      
-    end
-  end
+      flash[:success] = "User destroyed."
+      redirect_to users_path
+    else
+      flash[:danger] = "Can't delete yourself."
+      redirect_to root_path
+    end 
+  end 
     
     
   private
@@ -68,24 +72,19 @@ class UsersController < ApplicationController
     end    
     
     def user_logged_in
-      if !logged_in?
-        redirect_to login_path
-        flash[:warning] = "Unable [not logged in]"
-      end
+      redirect_to login_path, flash: { :warning => "Unable" } unless logged_in?
     end
     
     def ensure_correct_user
-			@user = User.find(params[:id])
-      if !current_user?(@user)
-        redirect_to root_path
-        flash[:warning] = "Unable [incorrect user]"
-      end
+      @user = User.find(params[:id])
+      redirect_to root_path, flash: { :danger => "Must be Logged in!" } unless current_user?(@user)
     end
     
+    def ensure_not_logged_in
+      redirect_to root_path, flash: { :warning => "You are logged in and cannot perform that action!" } unless !logged_in?
+    end 
+    
     def ensure_admin_user
-      if !current_user.nil? && !current_user.admin?
-        redirect_to root_path
-        flash[:warning] = "Unable [not admin]"
-      end
+      redirect_to users_path unless current_user.admin?
     end
 end
