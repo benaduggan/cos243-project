@@ -8,17 +8,26 @@ class UsersController < ApplicationController
   end
   
   def new
-    @user = User.new
+    if logged_in?
+      redirect_to root_path
+    else
+      @user = User.new
+    end
   end
   
   def create
-    @user = User.new(permittedparams)
-    
-    if @user.save then
-      flash[:success] = "Welcome to the site #{@user.username}!"
-      redirect_to @user
+    if logged_in?
+      redirect_to root_path
     else
-      render 'new'
+      @user = User.new(permittedparams)
+    
+      if @user.save then
+        flash[:success] = "Welcome to the site #{@user.username}! You are now logged in!"
+        logIn(@user)
+        redirect_to @user
+      else
+        render 'new'
+      end
     end
   end
   
@@ -41,8 +50,13 @@ class UsersController < ApplicationController
 
   def destroy
     @user = User.find(params[:id])
-    @user.destroy
-    redirect_to users_path      
+    if @user.admin?
+      redirect_to root_path
+    else
+      @user.destroy
+      flash[:success] = "User successfully deleted!"
+      redirect_to users_path      
+    end
   end
     
     

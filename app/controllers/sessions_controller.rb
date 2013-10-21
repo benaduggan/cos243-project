@@ -1,22 +1,26 @@
 class SessionsController < ApplicationController
 
   def new
+    @thereisanerror = false
   end
   
   def create
+    @thereisanerror = false
     @user = User.find_by_username(params[:username])
     if @user && @user.authenticate(params[:password])
-      cookies[:user_id] = @user.id
+      logIn(@user)
       flash[:success] = "You are now logged in #{@user.username}!"
       redirect_to @user
     else
-      flash.now[:danger] = "invalid username or password"
+      @thereisanerror = true
       render 'new'
     end
   end
   
   def destroy
-    
+    logOut(@user)
+    flash[:success] = "You have logged out!"
+    redirect_to root_path
   end
 
 end
