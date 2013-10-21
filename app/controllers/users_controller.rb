@@ -18,6 +18,7 @@ class UsersController < ApplicationController
   def create
     if logged_in?
       redirect_to root_path
+      flash[:danger] = "Already Logged In"
     else
       @user = User.new(permittedparams)
     
@@ -51,6 +52,7 @@ class UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     if @user.admin?
+      flash.now[:danger] = "Should not delete admin"
       redirect_to root_path
     else
       @user.destroy
@@ -66,15 +68,24 @@ class UsersController < ApplicationController
     end    
     
     def user_logged_in
-      redirect_to login_path unless logged_in?
+      if !logged_in?
+        redirect_to login_path
+        flash[:warning] = "Unable [not logged in]"
+      end
     end
     
     def ensure_correct_user
-      @user = User.find(params[:id])
-      redirect_to root_path unless current_user?(@user)
+			@user = User.find(params[:id])
+      if !current_user?(@user)
+        redirect_to root_path
+        flash[:warning] = "Unable [incorrect user]"
+      end
     end
     
     def ensure_admin_user
-      redirect_to users_path unless current_user.admin?
+      if !current_user.nil? && !current_user.admin?
+        redirect_to root_path
+        flash[:warning] = "Unable [not admin]"
+      end
     end
 end
