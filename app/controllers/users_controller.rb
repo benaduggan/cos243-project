@@ -9,11 +9,7 @@ class UsersController < ApplicationController
   end
   
   def new
-    if logged_in?
-      redirect_to root_path
-    else
       @user = User.new
-    end
   end
   
   def create
@@ -47,14 +43,14 @@ class UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     if @user.admin?
-      flash[:danger] = "Should not delete admin"
+      flash[:danger] = "You can not delete an admin account!"
       redirect_to root_path
     elsif !current_user?(@user)
       @user.destroy
-      flash[:success] = "User destroyed."
+      flash[:success] = "User was destroyed."
       redirect_to users_path
     else
-      flash[:danger] = "Can't delete yourself."
+      flash[:danger] = "You cannot delete yourself."
       redirect_to root_path
     end 
   end 
@@ -81,4 +77,5 @@ class UsersController < ApplicationController
     def ensure_admin_user
       redirect_to users_path unless current_user.admin?
     end
+    
 end
