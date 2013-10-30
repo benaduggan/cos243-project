@@ -25,12 +25,9 @@ ActiveRecord::Schema.define(version: 20131030135023) do
     t.datetime "updated_at"
   end
 
-  add_index "contests", ["referee_id"], name: "index_contests_on_referee_id"
-  add_index "contests", ["user_id"], name: "index_contests_on_user_id"
-
   create_table "matches", force: true do |t|
     t.string   "status"
-    t.date     "completetion"
+    t.date     "completion"
     t.datetime "earliest_start"
     t.integer  "manager_id"
     t.string   "manager_type"
@@ -56,15 +53,15 @@ ActiveRecord::Schema.define(version: 20131030135023) do
     t.string   "file_location"
     t.text     "description"
     t.string   "name"
-    t.boolean  "downloadable"
-    t.boolean  "playable"
+    t.boolean  "downloadable",  default: false
+    t.boolean  "playable",      default: true
     t.integer  "user_id"
-    t.integer  "contest_id_id"
+    t.integer  "contest_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "players", ["contest_id_id"], name: "index_players_on_contest_id_id"
+  add_index "players", ["contest_id"], name: "index_players_on_contest_id"
   add_index "players", ["user_id"], name: "index_players_on_user_id"
 
   create_table "referees", force: true do |t|
@@ -86,8 +83,8 @@ ActiveRecord::Schema.define(version: 20131030135023) do
     t.string   "password_digest"
     t.string   "email"
     t.boolean  "admin",           default: false
-    t.boolean  "contest_creator"
-    t.boolean  "banned"
+    t.boolean  "contest_creator", default: false
+    t.boolean  "banned",          default: false
     t.string   "chat_url"
   end
 
