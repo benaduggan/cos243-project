@@ -7,6 +7,7 @@ GameContestServer::Application.routes.draw do
   get 'login', to: 'sessions#new', as: 'login'
   delete 'logout', to: 'sessions#destroy', as: 'logout'
   
+  resources :referees
   
   
   # The priority is based upon order of creation: first created -> highest priority.

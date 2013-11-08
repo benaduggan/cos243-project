@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  belongs_to :referees
+  has_many :referees
   belongs_to :players
   belongs_to :contests
   
