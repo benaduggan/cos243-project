@@ -11,10 +11,10 @@ class RefereesController < ApplicationController
   def create
     @referee = current_user.referees.build(acceptable_params)
     if @referee.save
-      flash[:success]="Referee created!"
+      flash[:success]="Referee has been created!"
       redirect_to @referee
     else
-      flash[:danger]="Invalid!"
+      flash[:danger]="Error while trying to create the referee!"
       render 'new'
     end
   end
@@ -30,22 +30,24 @@ class RefereesController < ApplicationController
   def update
     @referee = Referee.find(params[:id])
     if @referee.update_attributes(acceptable_params)
-      flash[:success] = "Referee updated"
+      flash[:success] = "Referee has been updated!"
       redirect_to @referee
     else
-      flash[:danger]="Invalid for some reason!"
+      flash[:danger]="Error while trying to update the referee!"
       render 'edit'
     end
   end
   
     def destroy
       @referee = Referee.find(params[:id])
+      @tempfilelocation = @referee.file_location
       if @referee.destroy
+        FileUtils.rm_f(@tempfilelocation)
         flash[:success] = "Referee was destroyed."
-        redirect_to '/referees'
+        redirect_to referees_path
     else
-        flash[:danger] = "Didn't delete it yo!"
-        redirect_to '/referees'
+        flash[:danger] = "Error while trying to delete referee!"
+        redirect_to referees_path
     end 
   end 
   
