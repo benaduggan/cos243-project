@@ -4,3 +4,8 @@
   @extend .has-error; 
   @extend .form-control;
 }
+
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus{
+ color: #428bca; 
+}

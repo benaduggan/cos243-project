@@ -20,4 +20,11 @@ class Referee < ActiveRecord::Base
     end
     self.file_location = file_location
   end
+    
+    
+  before_destroy :delete_file
+  
+  def delete_file
+    File.delete(self.file_location)
+  end
 end

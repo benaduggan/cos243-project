@@ -1,6 +1,7 @@
 class RefereesController < ApplicationController
   before_action :user_logged_in, only: [:new,:create,:destroy,:edit, :update]
   before_action :ensure_contest_creator, only: [:new, :create, :edit, :update]
+  #before_action :ensure_correct_user, only: [:edit, :update]
   
   def index
     @referees = Referee.all
@@ -34,9 +35,6 @@ class RefereesController < ApplicationController
     #@tempfilelocation = @referee.file_location
     if @referee.update_attributes(acceptable_params)
       flash[:success] = "Referee has been updated!"
-      #if @tempfilelocation!=acceptable_params[:file_location]
-        #FileUtils.rm_f(@tempfilelocation)
-      #end
       redirect_to @referee
     else
       flash[:danger]="Error while trying to update the referee!"
@@ -44,18 +42,18 @@ class RefereesController < ApplicationController
     end
   end
   
-    def destroy
-      @referee = Referee.find(params[:id])
-      @tempfilelocation = @referee.file_location
-      if @referee.destroy
-        FileUtils.rm_f(@tempfilelocation)
-        flash[:success] = "Referee was destroyed."
-        redirect_to referees_path
+  
+  def destroy
+    @referee = Referee.find(params[:id])
+    if current_user?(@referee.user) #|| current_user.admin?
+      @referee.destroy
+      flash[:success] = "Referee destroyed."
+      redirect_to referees_path
     else
-        flash[:danger] = "Error while trying to delete referee!"
-        redirect_to referees_path
+      flash[:danger] = "Can't delete referee."
+      redirect_to root_path
     end 
-  end 
+  end
   
   private
   
@@ -70,4 +68,9 @@ class RefereesController < ApplicationController
   def ensure_contest_creator 
       redirect_to root_path, flash: { :danger => "You are not a contest creator!" } unless current_user.contest_creator?
   end
+  
+    def ensure_correct_user
+      @referee = Referee.find(params[:id])
+      redirect_to root_path, flash: { :danger => "Must be Logged in!" } unless current_user?(@referee.user_id)
+    end
 end
