@@ -1,4 +1,6 @@
 class RefereesController < ApplicationController
+  before_action :user_logged_in, only: [:new,:create,:destroy,:edit, :update]
+  before_action :ensure_contest_creator, only: [:new, :create, :edit, :update]
   
   def index
     @referees = Referee.all
@@ -11,7 +13,7 @@ class RefereesController < ApplicationController
   def create
     @referee = current_user.referees.build(acceptable_params)
     if @referee.save
-      flash[:success]="Referee has been created!"
+      flash[:success]="Referee created"
       redirect_to @referee
     else
       flash[:danger]="Error while trying to create the referee!"
@@ -29,8 +31,12 @@ class RefereesController < ApplicationController
     
   def update
     @referee = Referee.find(params[:id])
+    #@tempfilelocation = @referee.file_location
     if @referee.update_attributes(acceptable_params)
       flash[:success] = "Referee has been updated!"
+      #if @tempfilelocation!=acceptable_params[:file_location]
+        #FileUtils.rm_f(@tempfilelocation)
+      #end
       redirect_to @referee
     else
       flash[:danger]="Error while trying to update the referee!"
@@ -56,5 +62,12 @@ class RefereesController < ApplicationController
   def acceptable_params
     params.require(:referee).permit(:name, :rules_url, :players_per_game, :upload)
   end
+   
+  def user_logged_in
+      redirect_to login_path, flash: { :warning => "Unable" } unless logged_in?
+  end
   
+  def ensure_contest_creator 
+      redirect_to root_path, flash: { :danger => "You are not a contest creator!" } unless current_user.contest_creator?
+  end
 end

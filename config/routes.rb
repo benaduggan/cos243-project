@@ -8,6 +8,8 @@ GameContestServer::Application.routes.draw do
   delete 'logout', to: 'sessions#destroy', as: 'logout'
   
   resources :referees
+  resources :contests
+  resources :players
   
   
   # The priority is based upon order of creation: first created -> highest priority.

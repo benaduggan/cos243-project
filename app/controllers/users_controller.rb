@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
-  before_action :user_logged_in, only: [:edit, :update]
+  before_action :ensure_user_logged_in, only: [:edit, :update]
   before_action :ensure_correct_user, only: [:edit, :update]
   before_action :ensure_admin_user, only: [:destroy]
   before_action :ensure_not_logged_in, only: [:new, :create]
+  
+  
   
   def index
     @users = User.all
@@ -61,8 +63,12 @@ class UsersController < ApplicationController
       permittedparams = params.require(:user).permit(:username,:password,:password_confirmation,:email)
     end    
     
-    def user_logged_in
-      redirect_to login_path, flash: { :warning => "Unable" } unless logged_in?
+    def ensure_admin_user
+     redirect_to users_path unless current_user.admin?
+    end 
+   
+    def ensure_user_logged_in
+     redirect_to login_path, flash: { :warning => "Unable, please log in!" } unless logged_in? 
     end
     
     def ensure_correct_user
@@ -72,10 +78,6 @@ class UsersController < ApplicationController
     
     def ensure_not_logged_in
       redirect_to root_path, flash: { :warning => "You are logged in and cannot perform that action!" } unless !logged_in?
-    end 
-    
-    def ensure_admin_user
-      redirect_to users_path unless current_user.admin?
     end
     
 end
