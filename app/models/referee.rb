@@ -6,7 +6,7 @@ class Referee < ActiveRecord::Base
   REGEX=/(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)/  
   validates :name, length: { minimum: 2 }  
   validates :rules_url, presence: true, :format => { :with => REGEX }
-  validates :players_per_game, numericality: { greater_than_or_equal_to: 1,less_than_or_equal_to: 10 }
+  validates :players_per_game, numericality: { greater_than_or_equal_to: 1,less_than_or_equal_to: 10, only_integer: true }
   validates :file_location, presence: true
     
     

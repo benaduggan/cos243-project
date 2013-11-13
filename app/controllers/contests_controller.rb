@@ -1,6 +1,7 @@
 class ContestsController < ApplicationController
-  before_action :ensure_user_logged_in, only: [:new, :create, :edit, :update]
-  before_action :ensure_contest_creator, only: [:new, :create, :edit, :update]
+  before_action :ensure_user_logged_in, only: [:new, :create, :edit, :update,:destroy]
+  before_action :ensure_contest_creator, only: [:new, :create, :edit, :update,:destroy]
+ 
   
   def new
     @contest = current_user.contests.build
@@ -42,10 +43,10 @@ class ContestsController < ApplicationController
     @contest = Contest.find(params[:id])
     if !current_user?(@contest)
       @contest.destroy
-      flash[:success] = "Referee destroyed."
-      redirect_to referees_path
+      flash[:success] = "Contest destroyed."
+      redirect_to contests_path
     else
-      flash[:danger] = "Can't delete referee."
+      flash[:danger] = "Can't delete contest."
       redirect_to root_path
     end 
   end
