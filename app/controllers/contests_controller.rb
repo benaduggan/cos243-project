@@ -28,7 +28,7 @@ class ContestsController < ApplicationController
   def update
     @contest = Contest.find(params[:id])
     if @contest.update_attributes(acceptable_params)
-      flash[:success] = "Referee #{@contest.name} updated successfully!"
+      flash[:success] = "Contest #{@contest.name} updated successfully!"
       redirect_to @contest
     else
       render 'edit'

@@ -9,7 +9,7 @@ class PlayersController < ApplicationController
   def create
     @player = current_user.players.build(acceptable_params)
     if @player.save then
-      flash[:success] = "Referee #{@player.name} created!"
+      flash[:success] = "Player #{@player.name} created!"
       redirect_to @player     
     else
       render 'new'
@@ -27,7 +27,7 @@ class PlayersController < ApplicationController
   def update
     @player =Player.find(params[:id])
     if @player.update_attributes(acceptable_params)
-      flash[:success] = "Referee #{@player.name} updated successfully!"
+      flash[:success] = "Player #{@player.name} updated successfully!"
       redirect_to @player
     else
       render 'edit'
@@ -52,7 +52,7 @@ class PlayersController < ApplicationController
   
   private
     def acceptable_params
-      params.require(:player).permit(:contest_id, :name, :description, :upload)
+      params.require(:player).permit(:contest_id, :name, :description, :upload,:downloadable,:playable)
     end
    
     def ensure_user_logged_in

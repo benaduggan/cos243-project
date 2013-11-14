@@ -8,14 +8,14 @@ class Referee < ActiveRecord::Base
   validates :rules_url, presence: true, :format => { :with => REGEX }
   validates :players_per_game, numericality: { greater_than_or_equal_to: 1,less_than_or_equal_to: 10, only_integer: true }
   validates :file_location, presence: true
-    
+
     
   def upload=(uploaded_file)
     if(uploaded_file.nil?)
       # problem no file
     else
       time_no_spaces = Time.now.to_s.gsub(/\s/, '_')
-      file_location = Rails.root.join('code', "referees",Rails.env, time_no_spaces).to_s
+      file_location = Rails.root.join('code', "referees",Rails.env, time_no_spaces).to_s + SecureRandom.hex
       IO::copy_stream(uploaded_file,file_location)
     end
     self.file_location = file_location
