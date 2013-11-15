@@ -12,6 +12,7 @@ gem 'validates_timeliness', github: 'softace/validates_timeliness', branch:  'su
 group :test do
   gem 'capybara'
   gem 'factory_girl_rails'
+  gem 'timecop'
 end
 
 # Use SCSS for stylesheets
