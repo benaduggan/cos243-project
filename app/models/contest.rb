@@ -1,3 +1,5 @@
+
+
 class Contest < ActiveRecord::Base
   belongs_to :user
   belongs_to :referee
@@ -11,9 +13,9 @@ class Contest < ActiveRecord::Base
   validates :start, presence: true
   validates :deadline, presence: true
   validates :description, presence: true 
-  
+
   validates_datetime :deadline, :on_or_after => lambda { Time.now.change(:usec =>0) }
   validates_datetime :start, :on_or_after => lambda { :deadline }
 
-  
+
 end
