@@ -8,7 +8,8 @@ class Player < ActiveRecord::Base
   
   validates :name, length: { minimum: 2 }, uniqueness: true 
   validates :description, presence: true
-  validates :file_location, presence: true 
+  validates :file_location, presence: true, :format => { :with => /.+players.+/ }
+  
   
   
   def upload=(uploaded_file)
