@@ -6,23 +6,26 @@ class Player < ActiveRecord::Base
   validates :user,  presence: true
   validates :contest, presence: true
   
-  validates :name, presence: true
+  validates :name, length: { minimum: 2 }, uniqueness: true 
   validates :description, presence: true
   validates :file_location, presence: true 
   
   
   def upload=(uploaded_file)
     if(uploaded_file.nil?)
-      # problem no file
+      #idk what to do here
     else
       time_no_spaces = Time.now.to_s.gsub(/\s/, '_')
-      file_location = Rails.root.join('code', "referees",Rails.env, time_no_spaces).to_s + SecureRandom.hex
+      file_location = Rails.root.join('code', "players",Rails.env, time_no_spaces).to_s + SecureRandom.hex
       IO::copy_stream(uploaded_file,file_location)
     end
     self.file_location = file_location
+    if File.exists?(file_location)
+      flash[:danger]="That was an invalid file location!"
+      redirect_to root_path
+    end
   end
-    
-    
+  
   before_destroy :delete_file
   
   def delete_file
