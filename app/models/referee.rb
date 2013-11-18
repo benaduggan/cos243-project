@@ -7,8 +7,15 @@ class Referee < ActiveRecord::Base
   validates :name, length: { minimum: 2 }, uniqueness: true  
   validates :rules_url, presence: true, :format => { :with => REGEX }
   validates :players_per_game, numericality: { greater_than_or_equal_to: 1,less_than_or_equal_to: 10, only_integer: true }
-  validates :file_location, presence: true, :format => { :with => /.+referees.+/ }
+  validates :file_location, presence: true
 
+  validate :filelocationstuff
+  
+  def filelocationstuff
+    if self.file_location && !File.exists?(self.file_location)
+      errors.add( :file_location, " is invalid!")
+    end
+  end
     
   def upload=(uploaded_file)
     if(uploaded_file.nil?)
