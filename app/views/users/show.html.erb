@@ -1,6 +1,10 @@
 <% provide(:title, @user.username) %>
 <h2>User Information</h2>
-<p><%= @user.username %>: <%= @user.email %> | <%= link_to "edit", edit_user_path(@user) %></p>
+<p>Name: <%= @user.username %> | <%= link_to "edit", edit_user_path(@user) %></p>
+<ul>
+  <li>Email: <%= @user.email %></li>
+  <li>Chat Url: <%= @user.chat_url %></li>
+</ul>
 
 <% if  @user.contest_creator? %>
 <h2>Referees</h2>
@@ -16,4 +20,3 @@
 <ul>
   <%= render partial: "user_players", collection: @user.players, as: :player%>
 </ul>
-<p><%= link_to "New Player", new_player_path %></p>
