@@ -3,15 +3,18 @@ class UsersController < ApplicationController
   before_action :ensure_correct_user, only: [:edit, :update]
   before_action :ensure_admin_user, only: [:destroy]
   before_action :ensure_not_logged_in, only: [:new, :create]
+
   
-  
+  respond_to :html, :json, :xml
   
   def index
     @users = User.all
+    respond_with(@users)
   end
   
   def new
       @user = User.new
+      respond_with(@user)
   end
   
   def create
@@ -19,10 +22,8 @@ class UsersController < ApplicationController
       if @user.save then
         flash[:success] = "Welcome to the site #{@user.username}! You are now logged in!"
         logIn(@user)
-        redirect_to @user
-      else
-        render 'new'
       end
+      respond_with(@user)
   end
   
   def show
@@ -30,16 +31,15 @@ class UsersController < ApplicationController
   end
 
   def edit 
+    respond_with(@user)
   end
     
   def update
     @user = User.find(params[:id])
     if @user.update_attributes(permittedparams)
       flash[:success] = "Profile updated"
-      redirect_to @user
-    else
-      render 'edit'
     end
+    respond_with(@user)
   end
 
   def destroy
@@ -55,8 +55,7 @@ class UsersController < ApplicationController
       flash[:danger] = "You cannot delete yourself."
       redirect_to root_path
     end 
-  end 
-    
+  end     
     
   private
     def permittedparams
@@ -79,5 +78,5 @@ class UsersController < ApplicationController
     def ensure_not_logged_in
       redirect_to root_path, flash: { :warning => "You are logged in and cannot perform that action!" } unless !logged_in?
     end
-    
+
 end
