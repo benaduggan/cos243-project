@@ -9,6 +9,7 @@ class Match < ActiveRecord::Base
   validates_date :completion, :on_or_before => lambda { Time.now.change(:usec =>0) }, :if => :checkfuturethings
   validates_datetime :earliest_start, :if => :checkthings
   
+
   
   def checkfuturethings
     if self.status != "Completed"
@@ -19,7 +20,9 @@ class Match < ActiveRecord::Base
   end
   
   def checkthings
-    if self.status=="Completed" || self.status=="Started"
+    if self.status=="Completed" 
+      return nil
+    elsif self.status=="Started"
       return nil
     else
       return true

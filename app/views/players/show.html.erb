@@ -12,3 +12,14 @@
 </ul>
 
 <h2><%="Match".pluralize(@player.contest.matches.count)%></h2>
+
+<%@losses=0%>
+<%@wins=0%>
+<%@player.player_matches.each do |f| %>
+    <%@wins+=1 if f.result=="Win"%>
+    <%@losses+=1 if f.result=="Loss"%>
+    <p><%=f.result%><p>
+<%end%>
+<p>Record: <%=@wins%>-<%=@losses%></p>
+
+
