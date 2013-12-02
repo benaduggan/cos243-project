@@ -8,4 +8,7 @@
   <li>Player is downloadable: <%= @player.downloadable %></li>
   <li>Description: <%= @player.description %></li>
   <li>Contest: <%= link_to @player.contest.name, contest_path(@player.contest) %> </li>
+  
 </ul>
+
+<h2><%="Match".pluralize(@player.contest.matches.count)%></h2>

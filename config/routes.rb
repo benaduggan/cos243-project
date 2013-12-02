@@ -11,9 +11,9 @@ GameContestServer::Application.routes.draw do
   
   resources :contests do
     resources :players, shallow: true
-    resources :matches, only: [:index,:edit,:update,:destroy]
+    resources :matches, shallow: true, only: [:index, :show]
   end
-  resources :matches, only: [:show, :new]
+
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
