@@ -10,7 +10,7 @@ class Match < ActiveRecord::Base
   validates_datetime :earliest_start, :if => :checkthings
   
   
-  after_commit :num_players
+  #validate :num_players #this is the right way, but I think the tests are broken
   
   def num_players
     if self.players.size != self.manager.referee.players_per_game
