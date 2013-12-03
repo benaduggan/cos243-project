@@ -9,7 +9,15 @@ class Match < ActiveRecord::Base
   validates_date :completion, :on_or_before => lambda { Time.now.change(:usec =>0) }, :if => :checkfuturethings
   validates_datetime :earliest_start, :if => :checkthings
   
-
+  
+  after_commit :num_players
+  
+  def num_players
+    if self.players.size != self.manager.referee.players_per_game
+      errors.add(:player_matches,"wrong number of players!")
+    end
+  end
+  
   
   def checkfuturethings
     if self.status != "Completed"
