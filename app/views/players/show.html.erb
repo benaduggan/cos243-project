@@ -19,6 +19,7 @@
     <%@wins+=1 if f.result=="Win"%>
     <%@losses+=1 if f.result=="Loss"%>
     <p><%=f.result%><p>
+    <li><%=link_to f.id, match_path(f.match)%>
 <%end%>
 <p>Record: <%=@wins%>-<%=@losses%></p>
 

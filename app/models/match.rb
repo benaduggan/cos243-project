@@ -10,11 +10,13 @@ class Match < ActiveRecord::Base
   validates_datetime :earliest_start, :if => :checkthings
   
   
-  #validate :num_players #this is the right way, but I think the tests are broken
+  validate :num_players
   
   def num_players
-    if self.players.size != self.manager.referee.players_per_game
-      errors.add(:player_matches,"wrong number of players!")
+    if self.players && self.manager
+      if self.players.count != self.manager.referee.players_per_game
+        errors.add(:player_matches,"wrong number of players!")
+      end
     end
   end
   
