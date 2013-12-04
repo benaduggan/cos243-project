@@ -18,8 +18,7 @@
 <%@player.player_matches.each do |f| %>
     <%@wins+=1 if f.result=="Win"%>
     <%@losses+=1 if f.result=="Loss"%>
-    <p><%=f.result%><p>
-    <li><%=link_to f.id, match_path(f.match)%>
+    <li><%=f.result%> - <%=link_to f.match_id, match_path(f.match)%>
 <%end%>
 <p>Record: <%=@wins%>-<%=@losses%></p>
 
